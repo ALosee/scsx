@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zyj.mapper.OptionMapper">
+
+
+    <resultMap id="option" type="OptionInfo">
+
+        <result column="question_num_id" property="questionNumId"/>
+        <result column="option_content" property="optionContent"/>
+        <result column="option_type" property="optionType"/>
+
+    </resultMap>
+
+    <select id="selectIdType" resultMap="option">
+
+       SELECT * FROM option_info WHERE option_type = #{optionType} AND question_num_id = #{questionNumId};
+
+
+    </select>
+
+
+    <update id="update" parameterType="optionInfo">
+
+        update option_info set question_num_id = #{questionNumId},option_type = #{optionType},option_content = #{optionContent} where id = #{id};
+
+    </update>
+
+
+
+
+
+
+
+
+
+</mapper>

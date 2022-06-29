@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zyj.mapper.MajorMapper">
+
+
+    <resultMap id="major" type="MajorInfo">
+        <id column="id" property="id"/>
+        <result column="major_name" property="majorName"/>
+        <result column="create_time" property="createTime" />
+        <result column="operate_time" property="operateTime" />
+        <result column="delete_flag" property="deleteFlag" />
+        <association property="academyInfo" javaType="AcademyInfo">
+            <id column="aid" property="id"/>
+            <result column="academy_name" property="academyName"/>
+            <result column="create_time" property="createTime" />
+            <result column="operate_time" property="operateTime" />
+            <result column="delete_flag" property="deleteFlag" />
+        </association>
+
+<!--        <collection property="list" ofType="academyInfo">-->
+<!--            <id></id>-->
+<!--            <result>-->
+
+<!--        </collection>-->
+
+    </resultMap>
+    <update id="update" parameterType="majorInfo">
+
+        update major_info set major_name = #{majorName},operate_time = #{operateTime},operator = #{operator} where id = #{id};
+
+    </update>
+    <delete id="deleteById">
+
+        delete from major where id = #{id};
+
+    </delete>
+    <delete id="deleteByIds">
+        delete from major_info where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="findAll" resultMap="major">
+
+        select mi.*,ai.id aid,ai.academy_name
+        from major_info mi
+        LEFT JOIN academy_info ai ON mi.academy_info_id = ai.id
+        order by mi.create_time desc
+
+    </select>
+    <select id="selectById" resultMap="major">
+
+        select * from major_info where id = #{id};
+
+
+    </select>
+
+    <select id="selectByIdForAcademy" resultMap="major">
+        select mi.*,ai.id aid,ai.academy_name
+        from major_info mi
+        inner join academy_info ai
+        ON mi.academy_info_id = ai.id
+        AND mi.id = #{id}
+    </select>
+
+
+    <insert id="save" parameterType="majorInfo">
+
+        insert into major_info(major_name,create_time,creator) values(#{majorName},#{createTime},#{creator});
+
+    </insert>
+
+
+
+
+</mapper>

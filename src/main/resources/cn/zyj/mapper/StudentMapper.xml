@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zyj.mapper.StudentMapper">
+
+    <resultMap id="student" type="StudentInfo">
+        <result column="student_num" property="studentNum"/>
+        <result column="student_name" property="studentName"/>
+        <result column="student_password" property="studentPassword"/>
+        <result column="student_gender" property="studentGender"/>
+        <result column="student_phone" property="studentPhone"/>
+        <result column="student_province" property="studentProvince"/>
+    </resultMap>
+
+    <resultMap id="studentExam" type="StudentInfo">
+        <result column="student_name" property="studentName"/>
+        <result column="total_score" property="totalScore"/>
+        <result column="exam_flag" property="examFlag"/>
+        <result column="recommend_course" property="recommendCourse"/>
+
+        <association property="classInfo" javaType="classInfo">
+            <result property="className" column="class_name"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="studentPage" type="StudentInfo">
+        <result column="student_num" property="studentNum"/>
+        <result column="student_name" property="studentName"/>
+        <result column="major_info_id" property="majorInfoId"/>
+        <result column="total_score" property="totalScore"/>
+        <result column="student_gender" property="studentGender"/>
+        <result column="student_phone" property="studentPhone"/>
+        <result column="student_province" property="studentProvince"/>
+        <result column="academy_name" property="academyInfo.academyName"></result>
+        <result column="major_name" property="majorInfo.majorName"></result>
+    </resultMap>
+    <delete id="deleteStudent">
+        DELETE FROM student_info WHERE student_num = #{id}
+    </delete>
+
+
+    <select id="selectAll" resultMap="studentPage">
+        SELECT student_num,student_name,student_gender,student_phone,student_province,total_score,academy_name, major_name
+        FROM student_info, academy_info, major_info
+        WHERE student_info.major_info_id = major_info.id AND major_info.academy_info_id = academy_info.id
+    </select>
+
+
+
+    <select id="login" resultMap="student">
+
+        select * from student_info where student_num =#{studentNum} and student_password = #{studentPassword}
+
+    </select>
+    <select id="queryStudentExamInfo" resultMap="studentExam">
+
+        SELECT student_name,total_score,exam_flag,recommend_course,class_name FROM student_info si
+        LEFT JOIN class_info  ci on si.class_id = ci.id
+        where student_num = #{studentNum}
+
+    </select>
+
+
+    <select id="selectById" resultMap="studentPage">
+        select * from student_info where id=#{id}
+
+    </select>
+
+    <update id="update">
+        update student_info set student_num=#{studentNum},student_name=#{studentName},student_gender=#{studentGender},
+                                student_phone=#{studentPhone},student_province=#{studentProvince},operator=#{operator},
+                                operate_time=#{operateTime},major_info_id=#{majorInfoId}
+        where id=#{id}
+    </update>
+    <update id="modifyPassword">
+        update student_info set student_password=#{newPassword}
+        where student_num=#{id}
+    </update>
+
+
+    <insert id="save">
+        insert into student_info(student_name,student_num,student_password,student_gender,student_phone,
+                                 student_province,major_info_id,creator,create_time)
+        value (#{studentName},#{studentNum},#{studentPassword},
+            #{studentGender},#{studentPhone},#{studentProvince},#{majorInfoId},#{creator},#{createTime})
+    </insert>
+</mapper>

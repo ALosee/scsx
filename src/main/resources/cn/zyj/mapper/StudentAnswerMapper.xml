@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zyj.mapper.StudentAnswerMapper">
+
+    <resultMap id="answer" type="StudentAnswerInfo">
+        <result column="id" property="id"></result>
+        <result column="student_num_id" property="studentNumId"/>
+        <result column="question_num_id" property="questionNumId"/>
+        <result column="answer_type" property="answerType"/>
+        <result column="student_score" property="studentScore"/>
+
+    </resultMap>
+
+    <insert id="save" parameterType="studentAnswerInfo">
+
+        insert into student_answer(student_num_id,question_num_id,answer_type,student_score) values (#{studentNumId},#{questionNumId},#{answerType}, #{studentScore})
+
+    </insert>
+
+
+    <select id="registerExam" resultType="java.lang.Integer">
+
+        SELECT DISTINCT exam_flag FROM student_info WHERE student_num = #{studentNumId};
+
+    </select>
+
+
+    <select id="studentAnswer" resultMap="answer">
+    select * from student_answer where student_num_id=#{id}
+    </select>
+</mapper>

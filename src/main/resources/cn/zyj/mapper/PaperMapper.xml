@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zyj.mapper.PaperMapper">
+
+
+    <resultMap id="exam" type="paperInfo">
+        <id column="pid" property="id"/>
+        <result column="question_num" property="questionNum"/>
+        <result column="question_content" property="questionContent"/>
+        <result column="question_answer" property="questionAnswer"/>
+        <result column="question_score" property="questionScore"/>
+        <result column="create_time" property="createTime" />
+        <result column="operate_time" property="operateTime" />
+        <result column="delete_flag" property="deleteFlag" />
+
+        <collection property="optionList" ofType="optionInfo">
+
+            <id property="id" column="oid"/>
+            <result property="questionNumId" column="question_num_id"/>
+            <result property="optionContent" column="option_content"/>
+            <result property="optionType" column="option_type"/>
+
+        </collection>
+
+    </resultMap>
+
+
+    <resultMap id="paper" type="paperInfo">
+
+        <result column="question_num" property="questionNum"/>
+        <result column="question_content" property="questionContent"/>
+        <result column="question_answer" property="questionAnswer"/>
+        <result column="question_score" property="questionScore"/>
+        <result column="create_time" property="createTime" />
+        <result column="operate_time" property="operateTime" />
+        <result column="delete_flag" property="deleteFlag" />
+
+    </resultMap>
+    <update id="update" parameterType="paperInfo">
+
+        update paper_info set paper_name = #{paperName},operate_time = #{operateTime},operator = #{operator} where id = #{id};
+
+    </update>
+    <delete id="deleteById">
+
+        delete from paper_info where id = #{id};
+
+    </delete>
+
+    <select id="findAll" resultMap="paper">
+
+        select * from paper_info order by create_time desc
+
+
+    </select>
+
+
+    <select id="findExam" resultMap="exam">
+
+        SELECT pi.id pid,pi.*, oi.id oid,oi.* FROM paper_info pi LEFT JOIN option_info  oi ON pi.question_num = oi.question_num_id;
+
+    </select>
+
+
+    <select id="selectById" resultMap="paper">
+
+        select * from paper_info where id = #{id};
+
+
+    </select>
+
+
+    <select id="findPaperMes" resultMap="paper">
+        select * from paper_info where question_num = #{questionNum};
+    </select>
+
+
+    <insert id="save" parameterType="paperInfo">
+
+        insert into paper_info(paper_name,create_time,creator) values(#{paperName},#{createTime},#{creator});
+
+    </insert>
+
+
+
+
+
+
+</mapper>

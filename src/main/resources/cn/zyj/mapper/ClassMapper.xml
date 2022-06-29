@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zyj.mapper.ClassMapper">
+
+    <resultMap id="class" type="classInfo">
+
+        <result column="class_name" property="className"/>
+        <result column="max_score" property="maxScore"/>
+        <result column="min_score" property="minScore"/>
+        <result column="class_rule" property="classRule"/>
+
+    </resultMap>
+
+
+    <select id="findAll" resultMap="class">
+        select * from class_info;
+
+    </select>
+
+
+    <insert id="save">
+        insert into class_info(id,class_name,max_score,min_score,class_rule,creator,create_time,operator,operate_time,delete_flag)
+        value (#{id},#{className},#{maxScore},#{minScore},#{classRule},#{creator},#{createTime},#{operator},#{operateTime},#{deleteFlag})
+    </insert>
+
+
+    <select id="selectById" resultType="ClassInfo">
+        select * from class_info where id = #{id}
+    </select>
+
+    <update id="updateSave">
+        update class_info
+        set class_name = #{className},max_score = #{maxScore},min_score = #{minScore},operator = #{operator},operate_time = #{operateTime}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from class_info where id = #{id}
+    </delete>
+
+</mapper>
